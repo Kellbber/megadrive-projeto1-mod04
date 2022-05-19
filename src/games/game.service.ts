@@ -7,7 +7,7 @@ export class GameService {
   games: Game[] = [];
 
   findAll() {
-    return `Buscar todos os GAMES`;
+    return this.games;
   }
   create(createGameDto: CreateGameDto) {
     const game: Game = {id: 'random_id', ...createGameDto}
