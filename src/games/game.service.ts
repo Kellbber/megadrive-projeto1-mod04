@@ -1,4 +1,5 @@
 import { Injectable } from "@nestjs/common";
+import { CreateGameDto } from "./dto/create-game.dto";
 
 @Injectable()
 export class GameService {
@@ -6,7 +7,7 @@ export class GameService {
   findAll() {
     return `Buscar todos os GAMES`;
   }
-  create() {
-    return `criar um game`
+  create(createGameDto: CreateGameDto) {
+    return `criar um game ` + JSON.stringify(createGameDto)
   }
 }
