@@ -14,7 +14,7 @@ export class GenreService {
     return this.prisma.genre.findMany();
   }
 
-  async findOne(id: string): Promise<Genre> {
+  async findById(id: string): Promise<Genre>{
     const record = await this.prisma.genre.findUnique({
       where: {
         id: id,
@@ -24,6 +24,11 @@ export class GenreService {
       throw new NotFoundException(`Registro com o ID '${id}' não encontrado`)
     }
     return record;
+
+  }
+
+  async findOne(id: string): Promise<Genre> {
+    return this.findById(id);
   }
 
   create(dto: CreateGenreDto): Promise<Genre> {
@@ -33,7 +38,8 @@ export class GenreService {
       data: genre,
     });
   }
-  update(id: string, dto: UpdateGenreDto): Promise<Genre> {
+  async update(id: string, dto: UpdateGenreDto): Promise<Genre> {
+    await this.findById(id);
     const data: Partial<Genre> = {...dto}
     return this.prisma.genre.update({
       where: {id},
