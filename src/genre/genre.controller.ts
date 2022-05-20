@@ -5,7 +5,7 @@ import { GenreService } from './genre.service';
 @ApiTags('Genres')
 @Controller('genres')
 export class GenreController {
-  constructor(private genreService: GenreService){}
+  constructor(private readonly genreService: GenreService){}
 
   @Get()
   findAll() {
@@ -13,7 +13,7 @@ export class GenreController {
   }
 
   @Post()
-  create(@Body()createGenreDto: CreateGenreDto) {
-    return this.genreService.create(createGenreDto);
+  create(@Body()dto: CreateGenreDto) {
+    return this.genreService.create(dto);
   }
 }

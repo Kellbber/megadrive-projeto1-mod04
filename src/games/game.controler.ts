@@ -5,14 +5,14 @@ import { GameService } from "./game.service";
 @ApiTags('Games')
 @Controller('games')
 export class GameController{
-  constructor(private gameService: GameService){}
+  constructor(private readonly gameService: GameService){}
   @Get()
   findAll(){
     return this.gameService.findAll();
   }
 
   @Post()
-  create(@Body()createGameDto: CreateGameDto){
-    return this.gameService.create(createGameDto);
+  create(@Body()dto: CreateGameDto){
+    return this.gameService.create(dto);
   }
 }
