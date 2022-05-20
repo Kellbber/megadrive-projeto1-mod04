@@ -7,6 +7,7 @@ import { Genre } from './entities/genre.entity';
 @Injectable()
 export class GenreService {
 
+
   constructor(private readonly prisma: PrismaService) {}
 
   findAll(): Promise<Genre[]> {
@@ -34,5 +35,9 @@ export class GenreService {
       where: {id},
       data,
     })
+  }
+
+  async delete(id: string) {
+   await this.prisma.genre.delete({where:{id}})
   }
 }

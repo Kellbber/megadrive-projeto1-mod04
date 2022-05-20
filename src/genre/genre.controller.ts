@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, Patch, Post } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { CreateGenreDto} from './dto/create-genre.dto';
 import { UpdateGenreDto } from './dto/update-genre.dto';
@@ -40,5 +40,14 @@ export class GenreController {
   update(@Param('id') id:string, @Body()dto: UpdateGenreDto): Promise<Genre>{
     return this.genreService.update(id, dto)
 
+  }
+
+  @Delete(':id')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  @ApiOperation({
+    summary: 'Deletar um gênero por ID'
+  })
+  delete(@Param('id') id: string){
+    this.genreService.delete(id);
   }
 }
