@@ -5,14 +5,22 @@ import { Genre } from './entities/genre.entity';
 
 @Injectable()
 export class GenreService {
+  constructor(private readonly prisma: PrismaService) {}
 
-  constructor(private readonly prisma:PrismaService){}
-
-  findAll() {
+  findAll(): Promise<Genre[]> {
     return this.prisma.genre.findMany();
   }
-  create(dto: CreateGenreDto) {
-    const genre: Genre = {...dto };
+
+  findOne(id: string): Promise<Genre> {
+    return this.prisma.genre.findUnique({
+      where: {
+        id: id,
+      },
+    });
+  }
+
+  create(dto: CreateGenreDto): Promise<Genre> {
+    const genre: Genre = { ...dto };
 
     return this.prisma.genre.create({
       data: genre,
