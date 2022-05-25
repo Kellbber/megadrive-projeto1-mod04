@@ -11,48 +11,60 @@ datasource db {
 }
 
 model Game {
-  id     String @id @default(uuid())
-  title   String
-  coverImageUrl String
-  description String
-  year  Int
-  imdbScore Int
-  trailerYoutubeUrl String
+  id                 String @id @default(uuid())
+  title              String
+  coverImageUrl      String
+  description        String
+  year               Int
+  imdbScore          Int
+  trailerYoutubeUrl  String
   gameplayYoutubeUrl String
 
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
+  genres Genre[]
+  profiles Profile[]
+
   @@map("game")
 }
 
 model Genre {
-  id     String @id @default(uuid())
-  name  String    @unique
+  id   String @id @default(uuid())
+  name String @unique
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
+  games Game[]
   @@map("genre")
 }
 
 model User {
-  id       String @id @default(uuid())
+  id       String  @id @default(uuid())
   name     String
-  email    String @unique
+  email    String  @unique
   password String
-  cpf      String    @unique
-  isAdmin Boolean
+  cpf      String  @unique
+  isAdmin  Boolean
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
+  profile Profile[]
   @@map("user")
 }
 
 model Profile {
-   id       String @id @default(uuid())
+  id   String @id @default(uuid())
   name String
+    user User @relation(fields: [userId], references: [id])
+  userId String @map("user_id")
+
+  games Game[]
+
+
+  @@map("profile")
 }
 
