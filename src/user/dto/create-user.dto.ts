@@ -29,7 +29,7 @@ export class CreateUserDto {
     example: 'Abcd@123456'
   })
   confirmPassword: string;
-  @IsNumber()
+  @IsString()
   @ApiProperty({
     description: 'cpf do usuário',
     example: '123456789'
