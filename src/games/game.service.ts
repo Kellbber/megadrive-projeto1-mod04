@@ -11,7 +11,7 @@ export class GameService {
   constructor(private readonly prisma: PrismaService) {}
 
   findAll(): Promise<Game[]> {
-    return this.prisma.game.findMany()
+    return this.prisma.game.findMany();
   }
   async findById(id: string): Promise<Game>{
     const record = await this.prisma.game.findUnique({
