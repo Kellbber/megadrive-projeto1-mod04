@@ -16,8 +16,8 @@ async function bootstrap() {
     .setDescription('Application to manage a game store.')
     .setVersion('1.0.0')
     .addTag('status')
-    .addTag('games')
-    .addTag('genres')
+    .addTag('Games')
+    .addTag('Genres')
     .addTag('profile')
     .build();
 
