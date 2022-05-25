@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsString, Matches, MinLength } from "class-validator";
+import { IsNumber, IsPositive, IsString, Matches, MinLength } from "class-validator";
 
 export class CreateUserDto {
   @IsString()
@@ -29,6 +29,15 @@ export class CreateUserDto {
     example: 'Abcd@123456'
   })
   confirmPassword: string;
+  @IsNumber()
+  @ApiProperty({
+    description: 'cpf do usuário',
+    example: '123456789'
+  })
   cpf: number;
+  @ApiProperty({
+    description: 'permissoes do usuário usuário',
+    example: true,
+  })
   isAdmin: boolean;
 }
