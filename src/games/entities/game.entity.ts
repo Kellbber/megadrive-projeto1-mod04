@@ -1,6 +1,10 @@
 export class Game{
     id?: string;
-    name: string;
-    price: number;
+    title: string;
+    year: number;
     description: string;
+    imdbScore: number;
+    coverImageUrl: string;
+    trailerYoutubeUrl: string;
+    gameplayYoutubeUrl: string;
 }
