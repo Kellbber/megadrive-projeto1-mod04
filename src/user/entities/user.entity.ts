@@ -1,3 +1,4 @@
+
 export class User {
   id?: string;
   name: string;
@@ -7,4 +8,5 @@ export class User {
   isAdmin: boolean;
   createdAt?: Date;
   updatedAt?: Date;
+  
 }
