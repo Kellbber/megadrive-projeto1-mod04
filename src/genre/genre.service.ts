@@ -14,21 +14,21 @@ export class GenreService {
     return this.prisma.genre.findMany();
   }
 
-  async findById(id: string): Promise<Genre>{
+  async findById(name:string): Promise<Genre>{
     const record = await this.prisma.genre.findUnique({
       where: {
-        id: id,
+        name,
       },
     });
     if(!record){
-      throw new NotFoundException(`Registro com o ID '${id}' não encontrado`)
+      throw new NotFoundException(`Registro com o ID '${name}' não encontrado`)
     }
     return record;
 
   }
 
-  async findOne(id: string): Promise<Genre> {
-    return this.findById(id);
+  async findOne(name: string): Promise<Genre> {
+    return this.findById(name);
   }
 
   create(dto: CreateGenreDto): Promise<Genre> {
@@ -38,18 +38,18 @@ export class GenreService {
       data: genre,
     }).catch(this.handleError);
   }
-  async update(id: string, dto: UpdateGenreDto): Promise<Genre> {
-    await this.findById(id);
+  async update(name: string, dto: UpdateGenreDto): Promise<Genre> {
+    await this.findById(name);
     const data: Partial<Genre> = {...dto}
     return this.prisma.genre.update({
-      where: {id},
+      where: {name},
       data,
     }).catch(this.handleError);
   }
 
-  async delete(id: string) {
-    await this.findById(id);
-   await this.prisma.genre.delete({where:{id}})
+  async delete(name: string) {
+    await this.findById(name);
+   await this.prisma.genre.delete({where:{name}})
   }
   handleError(error: Error): undefined{
     const errorLines = error.message?.split('\n');

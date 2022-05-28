@@ -1,8 +1,10 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, HttpStatus, HttpCode } from '@nestjs/common';
-import { ProfileService } from './profile.service';
+import {
+  Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, Patch, Post
+} from '@nestjs/common';
+import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { CreateProfileDto } from './dto/create-profile.dto';
 import { UpdateProfileDto } from './dto/update-profile.dto';
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ProfileService } from './profile.service';
 
 @ApiTags('profile')
 @Controller('profile')
@@ -11,7 +13,7 @@ export class ProfileController {
 
   @Post()
   @ApiOperation({
-    summary: 'Criar um perfil'
+    summary: 'Criar um perfil',
   })
   create(@Body() createProfileDto: CreateProfileDto) {
     return this.profileService.create(createProfileDto);
@@ -19,7 +21,7 @@ export class ProfileController {
 
   @Get()
   @ApiOperation({
-    summary: 'Listar todos os perfis'
+    summary: 'Listar todos os perfis',
   })
   findAll() {
     return this.profileService.findAll();
@@ -27,7 +29,7 @@ export class ProfileController {
 
   @Get(':id')
   @ApiOperation({
-    summary: 'Achar um perfil por ID'
+    summary: 'Achar um perfil por ID',
   })
   findOne(@Param('id') id: string) {
     return this.profileService.findOne(id);
@@ -35,7 +37,7 @@ export class ProfileController {
 
   @Patch(':id')
   @ApiOperation({
-    summary: 'Editar um perfil por ID'
+    summary: 'Editar um perfil por ID',
   })
   update(@Param('id') id: string, @Body() updateProfileDto: UpdateProfileDto) {
     return this.profileService.update(id, updateProfileDto);
@@ -44,9 +46,9 @@ export class ProfileController {
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
   @ApiOperation({
-    summary: 'Deletar um perfil por ID'
+    summary: 'Deletar um perfil por ID',
   })
   delete(@Param('id') id: string) {
-  this.profileService.delete(id);
+    this.profileService.delete(id);
   }
 }

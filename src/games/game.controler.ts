@@ -21,7 +21,7 @@ export class GameController{
     summary: 'Achar um game por ID'
   })
   findOne(@Param('id') id:string): Promise<Game>{
-    return this.gameService.findOne(id);
+    return this.gameService.findById(id);
   }
 
   @Post()

@@ -20,6 +20,7 @@ async function bootstrap() {
     .addTag('Genres')
     .addTag('user')
     .addTag('profile')
+    .addTag('homepage')
     .build();
 
   const document = SwaggerModule.createDocument(app, config);
