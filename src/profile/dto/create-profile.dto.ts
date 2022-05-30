@@ -11,21 +11,21 @@ export class CreateProfileDto {
   title: string;
   @IsString()
   @ApiProperty({
-    description: 'nome do perfil',
-    example: 'Kellbber',
+    description: 'imagem do perfil',
+    example: 'https://avatars.githubusercontent.com/u/96138394',
   })
   @IsString()
   imageUrl: string;
   @IsString()
   @ApiProperty({
-    description: 'id do usuário',
-    example: '4a00b7c6-525f-4645-99e7-1b9b59e0d602',
+    description: 'id do usuário(obrigatório)',
+    example: '35f3cbfe-8e0b-45ae-8740-000f7c4d256b',
   })
   userId: string;
 
   @ApiProperty({
-    description: 'id do game',
-    example: '27b8e610-04a7-4d32-9120-72909d3c91ee',
+    description: 'id do game (opcional)',
+    example: '4e977676-1e50-4396-978a-e9d5919b39b5',
   })
   gameId?: string;
 }

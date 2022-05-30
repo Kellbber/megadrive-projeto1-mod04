@@ -39,5 +39,10 @@ export class CreateGameDto {
   })
   gameplayYoutubeUrl: string;
 
-  genreName?: string;
+  @IsString()
+  @ApiProperty({
+    description: 'gênero do jogo(obrigatório)',
+    example: 'MMO-RPG',
+  })
+  genreName: string;
 }
