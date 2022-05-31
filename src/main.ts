@@ -16,11 +16,13 @@ async function bootstrap() {
     .setDescription('Application to manage a game store.')
     .setVersion('1.0.0')
     .addTag('status')
+    .addTag('auth')
     .addTag('Games')
     .addTag('Genres')
     .addTag('user')
     .addTag('profile')
     .addTag('homepage')
+    .addBearerAuth()
     .build();
 
   const document = SwaggerModule.createDocument(app, config);

@@ -9,6 +9,7 @@ import { Game } from './entities/game.entity';
 export class GameService {
 
   constructor(private readonly prisma: PrismaService) {}
+  
  async create(createGameDto: CreateGameDto) {
     const data: Prisma.GameCreateInput = {
       title: createGameDto.title,
