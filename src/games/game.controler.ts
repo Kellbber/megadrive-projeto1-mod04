@@ -1,6 +1,8 @@
 import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, Patch, Post, UseGuards } from "@nestjs/common";
 import { AuthGuard } from "@nestjs/passport";
 import { ApiBearerAuth, ApiOperation, ApiTags } from "@nestjs/swagger";
+import { User } from "src/user/entities/user.entity";
+import { LoggedUser } from "../auth/logged-user.decorator";
 import { CreateGameDto } from "./dto/create-game.dto";
 import { UpdateGameDto } from "./dto/update-game.dto";
 import { Game } from "./entities/game.entity";
@@ -31,16 +33,16 @@ export class GameController{
   @ApiOperation({
     summary: 'Criar um game'
   })
-  create(@Body()dto: CreateGameDto): Promise<Game>{
-    return this.gameService.create(dto);
+  create(@LoggedUser() user: User,@Body()dto: CreateGameDto): Promise<Game>{
+    return this.gameService.create(dto,user);
   }
 
   @Patch(':id')
   @ApiOperation({
     summary: 'Atualizar um game por ID'
   })
-  update(@Param('id') id:string, @Body()dto: UpdateGameDto): Promise<Game>{
-    return this.gameService.update(id, dto)
+  update(@LoggedUser() user: User,@Param('id') id:string, @Body()dto: UpdateGameDto): Promise<Game>{
+    return this.gameService.update(id, dto, user)
 
   }
 
@@ -49,7 +51,7 @@ export class GameController{
   @ApiOperation({
     summary: 'Deletar um game por ID'
   })
-  delete(@Param('id') id: string){
-    this.gameService.delete(id);
+  delete(@LoggedUser() user: User,@Param('id') id: string){
+    return this.gameService.delete(id, user);
   }
 }
