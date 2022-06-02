@@ -1,6 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNumber, IsPositive, IsString, IsUrl } from 'class-validator';
-import { Genre } from 'src/genre/entities/genre.entity';
 
 export class CreateGameDto {
   @ApiProperty({ description: 'titulo do game', example: 'Yu-gi-Oh' })

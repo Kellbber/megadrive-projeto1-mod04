@@ -3,6 +3,8 @@ import {
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { User } from '@prisma/client';
+import { LoggedUser } from 'src/auth/logged-user.decorator';
 import { CreateProfileDto } from './dto/create-profile.dto';
 import { UpdateProfileDto } from './dto/update-profile.dto';
 import { ProfileService } from './profile.service';
@@ -18,8 +20,8 @@ export class ProfileController {
   @ApiOperation({
     summary: 'Criar um perfil',
   })
-  create(@Body() createProfileDto: CreateProfileDto) {
-    return this.profileService.create(createProfileDto);
+  create(@LoggedUser() user: User,@Body() createProfileDto: CreateProfileDto) {
+    return this.profileService.create(user.id,createProfileDto);
   }
 
   @Get()
@@ -42,8 +44,8 @@ export class ProfileController {
   @ApiOperation({
     summary: 'Editar um perfil por ID',
   })
-  update(@Param('id') id: string, @Body() updateProfileDto: UpdateProfileDto) {
-    return this.profileService.update(id, updateProfileDto);
+  update(@LoggedUser() user: User,@Param('id') id: string, @Body() updateProfileDto: UpdateProfileDto) {
+    return this.profileService.update(id,user.id,updateProfileDto);
   }
 
   @Delete(':id')
