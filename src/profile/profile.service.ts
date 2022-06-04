@@ -1,8 +1,10 @@
 import {
   Injectable,
   NotFoundException,
-  UnprocessableEntityException
+  UnprocessableEntityException,
 } from '@nestjs/common';
+import { disconnect } from 'process';
+import { identity } from 'rxjs';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateProfileDto } from './dto/create-profile.dto';
 import { UpdateProfileDto } from './dto/update-profile.dto';
@@ -21,12 +23,19 @@ export class ProfileService {
     });
   }
 
-  async findById(id: string): Promise<Profile> {
+  async findById(id: string){
     const record = await this.prisma.profile.findUnique({
       where: {
         id: id,
       },
-      include: { games: true },
+      include: {
+        games: true,
+        favoriteGames:{
+          select:{
+            games:true,
+            id: true
+          }
+        } },
     });
     if (!record) {
       throw new NotFoundException(`Registro com o ID '${id}' não encontrado`);
@@ -34,11 +43,11 @@ export class ProfileService {
     return record;
   }
 
-  async findOne(id: string): Promise<Profile> {
+  async findOne(id: string) {
     return this.findById(id);
   }
 
-  async create(userId: string,dto: CreateProfileDto): Promise<Profile> {
+  async create(userId: string, dto: CreateProfileDto): Promise<Profile> {
     if (dto.gameId) {
       return await this.prisma.profile
         .create({
@@ -68,30 +77,93 @@ export class ProfileService {
         .catch(this.handleError);
     }
   }
+  async addOrRemoveFavoriteGame(profileId: string, gameId: string) {
+    const user = await this.findById(profileId);
+    let favoritedGame = false;
+    user.favoriteGames.games.map((game)=>{
+      if(gameId===game.id){
+        favoritedGame = true;
+      }
+    })
+    if(favoritedGame){
+      return await this.prisma.favoriteGames.update({
+        where:{
+          id: user.favoriteGames.id,
 
+        },
+        data:{
+          games:{
+            disconnect:{
+              id: gameId,
+            }
+          }
+        }
+      })
+    }else{
+      return await this.prisma.favoriteGames.update({
+        where:{
+          id: user.favoriteGames.id,
+
+        },
+        data:{
+          games:{
+            connect:{
+              id: gameId,
+            }
+          }
+        }
+      })
+    }
+  }
   async update(userId: string, id: string, dto: UpdateProfileDto) {
-    await this.findById(id);
+    const user = await this.findById(id);
+
     if (dto.gameId) {
-      return this.prisma.profile
-        .update({
-          where: { id },
-          data: {
-            title: dto.title,
-            imageUrl: dto.imageUrl,
-            userId: userId,
-            games: {
-              connect: {
-                id: dto.gameId,
+      let GameExist = false;
+      user.games.map((game) => {
+        if (game.id == dto.gameId) {
+          GameExist = true;
+        }
+      });
+      if (GameExist) {
+        return this.prisma.profile
+          .update({
+            where: { id: id },
+            data: {
+              title: dto.title,
+              imageUrl: dto.imageUrl,
+              userId: userId,
+              games: {
+                disconnect: {
+                  id: dto.gameId,
+                },
               },
             },
-          },
-          include: { games: true },
-        })
-        .catch(this.handleError);
+            include: { games: true },
+          })
+          .catch(this.handleError);
+      } else {
+        return this.prisma.profile
+          .update({
+            where: { id: id },
+            data: {
+              title: dto.title,
+              imageUrl: dto.imageUrl,
+              userId: userId,
+              games: {
+                connect: {
+                  id: dto.gameId,
+                },
+              },
+            },
+            include: { games: true },
+          })
+          .catch(this.handleError);
+      }
     } else {
       return this.prisma.profile
         .update({
-          where: { id },
+          where: { id: id },
           data: {
             title: dto.title,
             imageUrl: dto.imageUrl,
@@ -103,7 +175,7 @@ export class ProfileService {
     }
   }
 
-  async delete(userId:string, id: string) {
+  async delete(userId: string, id: string) {
     await this.findById(id);
     await this.prisma.profile.delete({ where: { id } });
   }

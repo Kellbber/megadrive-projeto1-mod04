@@ -1,4 +1,6 @@
 import { Injectable } from '@nestjs/common';
+import { title } from 'process';
+import { Game } from 'src/games/entities/game.entity';
 import { Genre } from 'src/genre/entities/genre.entity';
 import { PrismaService } from 'src/prisma/prisma.service';
 
@@ -10,34 +12,43 @@ export class HomepageService {
       where: {
         id: id,
       },
-      include: {
-        games: true,
-        user: true,
-      },
-    });
+      select: {
+        title: true,
+        imageUrl: true,
+        games: {
+          include: {
+            genres: true,
+          },
+        },
+        favoriteGames:{
+          select:{
+            games: true
+          }
+        }
+
+    }});
+    const listGames = profileData.games;
+    const favoriteGames = profileData.favoriteGames;
     const orderedGames = [];
     const allGenres = await this.prisma.genre.findMany();
-    const allGames = await this.prisma.game.findMany({
-      include: { genres: true },
-    });
     allGenres.map((genre) => {
       const gamesperGenre = [];
-      allGames.map((game) => {
+      listGames.map((game) => {
         if (game.genres[0].name == genre.name) {
           gamesperGenre.push(game.title);
         }
       });
       const genderObj = {
-        name: genre.name,
-        games: gamesperGenre,
+        genre: genre.name,
+        title: gamesperGenre,
       };
       if (gamesperGenre.length !== 0) {
         orderedGames.push(genderObj);
       }
     });
     return {
-      profile: profileData,
-      gamesPerGenre: orderedGames,
+      games: orderedGames,
+      favoriteGames: favoriteGames,
     };
   }
 }

@@ -20,7 +20,15 @@ export class CreateProfileDto {
 
   @ApiProperty({
     description: 'id do game (opcional)',
-    example: '4e977676-1e50-4396-978a-e9d5919b39b5',
+    example: '1d565ff0-d675-401a-98ae-52fbb2268f10',
   })
   gameId?: string;
+
+  @ApiProperty({
+    description: 'id do game para adicionar ou remover dos favoritos (opcional)',
+    example: '1d565ff0-d675-401a-98ae-52fbb2268f10',
+  })
+  favoriteGameId?: string
+
+
 }

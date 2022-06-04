@@ -44,16 +44,24 @@ export class ProfileController {
   @ApiOperation({
     summary: 'Editar um perfil por ID',
   })
-  update(@LoggedUser() user: User,@Param('id') id: string, @Body() updateProfileDto: UpdateProfileDto) {
-    return this.profileService.update(id,user.id,updateProfileDto);
+  update(@LoggedUser() user: User, @Param('id') id: string, @Body() updateProfileDto: UpdateProfileDto) {
+    return this.profileService.update(user.id,id,updateProfileDto);
   }
+
+  @Patch('favoriteGame/:id')
+  @ApiOperation({
+    summary: 'Adicionar ou remover um game do favorito',
+  })
+updateFavorite(@Param('id') id: string, @Body() UpdateProfileDto: UpdateProfileDto){
+  return this.profileService.addOrRemoveFavoriteGame(id,UpdateProfileDto.favoriteGameId)
+}
 
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
   @ApiOperation({
     summary: 'Deletar um perfil por ID',
   })
-  delete(@LoggedUser() user: User,@Param('id') id: string) {
+  delete(@LoggedUser() user:User, @Param('id') id: string) {
     this.profileService.delete(user.id,id);
   }
 }

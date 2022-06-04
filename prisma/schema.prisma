@@ -20,18 +20,21 @@ model Game {
   trailerYoutubeUrl  String
   gameplayYoutubeUrl String
 
+  favoriteGames FavoriteGames[]
+
+
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
-  genres Genre[]
+  genres   Genre[]
   profiles Profile[]
 
   @@map("game")
 }
 
 model Genre {
-  name String @unique @id
+  name String @id @unique
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
@@ -56,11 +59,13 @@ model User {
 }
 
 model Profile {
-  id   String @id @default(uuid())
-  title String
+  id       String @id @default(uuid())
+  title    String
   imageUrl String
-    user User @relation(fields: [userId], references: [id])
-  userId String @map("user_id")
+  user     User   @relation(fields: [userId], references: [id])
+  userId   String @map("user_id")
+
+  favoriteGames FavoriteGames?
 
   games Game[]
 
@@ -68,3 +73,11 @@ model Profile {
   @@map("profile")
 }
 
+model FavoriteGames {
+  id String @id @default(uuid())
+
+  profile   Profile @relation(fields: [profileId], references: [id])
+  profileId String  @map("profile_id") @unique
+
+  games Game[]
+}
