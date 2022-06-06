@@ -35,9 +35,6 @@ export class CreateUserDto {
     example: '123456789'
   })
   cpf: string;
-  @ApiProperty({
-    description: 'permissoes do usuário usuário',
-    example: false,
-  })
+ 
   isAdmin: boolean;
 }
