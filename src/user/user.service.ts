@@ -2,6 +2,7 @@ import {
   BadRequestException,
   Injectable,
   NotFoundException,
+  UnauthorizedException,
   UnprocessableEntityException,
 } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
@@ -25,10 +26,16 @@ export class UserService {
   }
   constructor(private readonly prisma: PrismaService) {}
 
-  findAll(): Promise<User[]> {
+  findAll(user: User): Promise<User[]> {
+    if(user.isAdmin){
     return this.prisma.user.findMany({
       select: this.userSelect
-    });
+    })
+  }      else {
+    throw new UnauthorizedException(
+      'Usuário não tem permissão. Caso isso esteja errado, contate o ADMIN!',
+    );
+  };
   }
 
   async findById(id: string): Promise<User> {
