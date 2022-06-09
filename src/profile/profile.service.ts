@@ -6,6 +6,7 @@ import {
 import { disconnect } from 'process';
 import { identity } from 'rxjs';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { domainToASCII } from 'url';
 import { CreateProfileDto } from './dto/create-profile.dto';
 import { UpdateProfileDto } from './dto/update-profile.dto';
 import { Profile } from './entities/profile.entity';
@@ -14,11 +15,20 @@ import { Profile } from './entities/profile.entity';
 export class ProfileService {
   constructor(private readonly prisma: PrismaService) {}
 
-  findAll(): Promise<Profile[]> {
+  findAll() {
     return this.prisma.profile.findMany({
       include: {
         user: true,
         games: true,
+        favoriteGames: {
+          select:{
+            games:{
+              select:{
+                title: true
+              }
+            }
+          }
+        }
       },
     });
   }
@@ -47,7 +57,7 @@ export class ProfileService {
     return this.findById(id);
   }
 
-  async create(userId: string, dto: CreateProfileDto): Promise<Profile> {
+  async create(userId: string, dto: CreateProfileDto) {
     if (dto.gameId) {
       return await this.prisma.profile
         .create({
@@ -61,7 +71,11 @@ export class ProfileService {
               },
             },
           },
-          include: { games: true, user: true },
+          include:{
+            games: true,
+            favoriteGames:true,
+
+          }
         })
         .catch(this.handleError);
     } else {
@@ -72,7 +86,7 @@ export class ProfileService {
             imageUrl: dto.imageUrl,
             userId: userId,
           },
-          include: { games: true },
+          include: { games: true, favoriteGames:true},
         })
         .catch(this.handleError);
     }
@@ -80,11 +94,29 @@ export class ProfileService {
   async addOrRemoveFavoriteGame(profileId: string, gameId: string) {
     const user = await this.findById(profileId);
     let favoritedGame = false;
-    user.favoriteGames.games.map((game)=>{
-      if(gameId===game.id){
-        favoritedGame = true;
-      }
-    })
+    if(user.favoriteGames!=null){
+
+      user.favoriteGames.games.map((game)=>{
+        if(gameId===game.id){
+          favoritedGame = true;
+        }
+      })
+    }else{
+      return this.prisma.favoriteGames.create({
+        data:{
+        profile: {
+          connect:{
+            id: profileId
+          },
+        },
+        games: {
+          connect:{
+            id: gameId
+          }
+        }
+        }
+      })
+    }
     if(favoritedGame){
       return await this.prisma.favoriteGames.update({
         where:{
@@ -176,7 +208,12 @@ export class ProfileService {
   }
 
   async delete(userId: string, id: string) {
-    await this.findById(id);
+    const profile = await this.findById(id);
+    await this.prisma.favoriteGames.delete({
+      where:{
+        id:profile.favoriteGames.id
+      }
+    })
     await this.prisma.profile.delete({ where: { id } });
   }
 

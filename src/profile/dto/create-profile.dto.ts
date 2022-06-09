@@ -28,7 +28,7 @@ export class CreateProfileDto {
     description: 'id do game para adicionar ou remover dos favoritos (opcional)',
     example: '1d565ff0-d675-401a-98ae-52fbb2268f10',
   })
-  favoriteGameId?: string
+  favoriteGameId?: string;
 
 
 }
