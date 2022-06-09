@@ -1,8 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { title } from 'process';
-import { Game } from 'src/games/entities/game.entity';
-import { Genre } from 'src/genre/entities/genre.entity';
-import { PrismaService } from 'src/prisma/prisma.service';
+
+import { PrismaService } from '../prisma/prisma.service';
 
 @Injectable()
 export class HomepageService {

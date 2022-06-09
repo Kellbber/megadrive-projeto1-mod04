@@ -1,15 +1,11 @@
 import {
   Injectable,
   NotFoundException,
-  UnprocessableEntityException,
+  UnprocessableEntityException
 } from '@nestjs/common';
-import { disconnect } from 'process';
-import { identity } from 'rxjs';
-import { PrismaService } from 'src/prisma/prisma.service';
-import { domainToASCII } from 'url';
+import { PrismaService } from '../prisma/prisma.service';
 import { CreateProfileDto } from './dto/create-profile.dto';
 import { UpdateProfileDto } from './dto/update-profile.dto';
-import { Profile } from './entities/profile.entity';
 
 @Injectable()
 export class ProfileService {
