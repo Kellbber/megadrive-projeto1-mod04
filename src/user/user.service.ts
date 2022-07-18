@@ -22,7 +22,9 @@ export class UserService {
     cpf: false,
     isAdmin: false,
     createdAt: true,
-    updatedAt: true
+    updatedAt: true,
+
+
   }
   constructor(private readonly prisma: PrismaService) {}
 
@@ -41,7 +43,10 @@ export class UserService {
   async findById(id: string): Promise<User> {
     const record = await this.prisma.user.findUnique({
       where: {id},
-      select: this.userSelect,
+      // select: this.userSelect,
+      include:{
+        profile:true,
+      }
     });
     if (!record) {
       throw new NotFoundException(`Registro com o ID '${id}' não encontrado`);
