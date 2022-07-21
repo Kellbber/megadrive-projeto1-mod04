@@ -205,14 +205,17 @@ export class ProfileService {
 
   async delete(userId: string, id: string) {
     const profile = await this.findById(id);
+    if(profile.favoriteGames){
     await this.prisma.favoriteGames.delete({
       where:{
         id:profile.favoriteGames.id
       }
     })
     await this.prisma.profile.delete({ where: { id } });
+  }else{
+    await this.prisma.profile.delete({ where: { id } });
   }
-
+  }
   handleError(error: Error): undefined {
     console.error(error);
     const errorLines = error.message?.split('\n');
