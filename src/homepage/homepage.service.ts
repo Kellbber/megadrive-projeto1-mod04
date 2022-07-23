@@ -31,14 +31,17 @@ export class HomepageService {
     const allGenres = await this.prisma.genre.findMany();
     allGenres.map((genre) => {
       const gamesperGenre = [];
+      const IdGame = [];
       listGames.map((game) => {
         if (game.genres[0].name == genre.name) {
           gamesperGenre.push(game.title);
+          IdGame.push(game.id);
         }
       });
       const genderObj = {
         genre: genre.name,
         title: gamesperGenre,
+        id: IdGame,
       };
       if (gamesperGenre.length !== 0) {
         orderedGames.push(genderObj);

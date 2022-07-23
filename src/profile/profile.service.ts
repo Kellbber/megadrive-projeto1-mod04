@@ -20,7 +20,8 @@ export class ProfileService {
           select:{
             games:{
               select:{
-                title: true
+                title: true,
+                id:true
               }
             }
           }
